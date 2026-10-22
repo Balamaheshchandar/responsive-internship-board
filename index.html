@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Discover fictional internship opportunities across technology domains.">
+  <meta name="theme-color" content="#0a66c2">
+  <title>InternHub | Internship Network</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to internships</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#" aria-label="InternHub home">
+        <span class="brand-mark" aria-hidden="true">ih</span>
+        <span class="brand-name">InternHub</span>
+      </a>
+
+      <form class="top-search" id="searchForm" role="search">
+        <label class="sr-only" for="searchInput">Search internships</label>
+        <span class="search-symbol" aria-hidden="true">⌕</span>
+        <input id="searchInput" type="search" placeholder="Search internships, skills, domains…" autocomplete="off">
+      </form>
+
+      <nav class="top-nav" aria-label="Main navigation">
+        <a class="nav-item active" href="#main-content" aria-current="page">
+          <span class="nav-icon" aria-hidden="true">⌂</span><span>Home</span>
+        </a>
+        <a class="nav-item" href="#internshipGrid">
+          <span class="nav-icon" aria-hidden="true">▤</span><span>Internships</span>
+        </a>
+        <a class="nav-item" href="#savedSection">
+          <span class="nav-icon" aria-hidden="true">☆</span><span>Saved</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="page-shell">
+    <div class="mobile-intro">
+      <p class="eyebrow">YOUR NEXT STEP STARTS HERE</p>
+      <h1>Find your next opportunity.</h1>
+    </div>
+
+    <div class="layout-grid">
+      <aside class="left-column" aria-label="Profile and shortcuts">
+        <section class="panel profile-panel">
+          <div class="cover-art" aria-hidden="true"></div>
+          <div class="profile-content">
+            <div class="avatar avatar-large" aria-hidden="true">IH</div>
+            <h2>Welcome, future professional</h2>
+            <p class="muted">Build skills. Explore roles. Start your journey.</p>
+            <div class="profile-divider"></div>
+            <div class="profile-stat"><span>Internships listed</span><strong id="profileTotal">—</strong></div>
+            <div class="profile-stat"><span>Saved by you</span><strong id="savedTotal">0</strong></div>
+          </div>
+        </section>
+
+        <section class="panel shortcut-panel">
+          <h2 class="panel-heading">Your shortcuts</h2>
+          <a class="shortcut" href="#filters"><span aria-hidden="true">⌕</span> Discover by domain</a>
+          <a class="shortcut" href="#savedSection"><span aria-hidden="true">☆</span> Saved internships <span class="shortcut-count" id="shortcutSavedCount">0</span></a>
+          <a class="shortcut" href="#internshipGrid"><span aria-hidden="true">▦</span> All opportunities</a>
+        </section>
+
+        <p class="sidebar-note">A learning project created for the EdVyro Full Stack Development internship.</p>
+      </aside>
+
+      <section class="center-column" aria-label="Internship feed">
+        <section class="panel feed-intro">
+          <p class="eyebrow">CAREER EXPLORER</p>
+          <h1>Opportunities to grow.</h1>
+          <p class="muted">Explore fictional internship listings, discover skills, and save roles you want to revisit.</p>
+          <div class="intro-tags">
+            <span>Student-friendly</span><span>Multiple domains</span><span>Responsive board</span>
+          </div>
+        </section>
+
+        <section class="panel filter-panel" id="filters" aria-labelledby="filterHeading">
+          <div class="section-heading">
+            <div>
+              <h2 id="filterHeading">Find your fit</h2>
+              <p class="muted">Narrow the feed to match your interests.</p>
+            </div>
+            <button type="button" class="text-button" id="clearFilters">Reset</button>
+          </div>
+          <div class="filter-fields">
+            <div class="field">
+              <label for="domainFilter">Domain</label>
+              <select id="domainFilter">
+                <option value="all">All domains</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="modeFilter">Work mode</label>
+              <select id="modeFilter">
+                <option value="all">All work modes</option>
+              </select>
+            </div>
+          </div>
+          <div class="quick-filters" aria-label="Quick domain filters">
+            <button class="filter-chip selected" type="button" data-domain="all" aria-pressed="true">All roles</button>
+          </div>
+        </section>
+
+        <section class="feed-section" aria-labelledby="feedHeading">
+          <div class="feed-section-heading">
+            <div>
+              <h2 id="feedHeading">Latest opportunities</h2>
+              <p class="muted">Hand-picked for your next learning step.</p>
+            </div>
+            <span class="result-pill" id="resultCount" aria-live="polite">Loading…</span>
+          </div>
+
+          <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+          <div class="internship-grid" id="internshipGrid"></div>
+        </section>
+
+        <section class="feed-section saved-section" id="savedSection" aria-labelledby="savedHeading">
+          <div class="feed-section-heading">
+            <div>
+              <h2 id="savedHeading">Your saved internships</h2>
+              <p class="muted">Keep interesting roles close at hand.</p>
+            </div>
+            <span class="result-pill" id="savedResultCount">0 saved</span>
+          </div>
+          <div class="saved-grid" id="savedGrid"></div>
+          <p class="saved-empty" id="savedEmpty">You haven't saved any internships yet. Select “Save” on a card to add one here.</p>
+        </section>
+      </section>
+
+      <aside class="right-column" aria-label="Filters and career tips">
+        <section class="panel right-panel">
+          <div class="right-panel-heading">
+            <h2>Explore domains</h2>
+            <span aria-hidden="true">ⓘ</span>
+          </div>
+          <p class="muted small">Choose a field to focus your search.</p>
+          <div id="domainLinks" class="domain-links">
+            <p class="muted small">Loading domains…</p>
+          </div>
+        </section>
+
+        <section class="panel right-panel career-tip">
+          <div class="tip-icon" aria-hidden="true">✦</div>
+          <h2>Make your next move count</h2>
+          <p class="muted">Highlight practical projects, relevant skills, and what you are excited to learn when preparing an application.</p>
+          <a href="#internshipGrid" class="tip-link">Explore opportunities <span aria-hidden="true">→</span></a>
+        </section>
+
+        <section class="panel right-panel about-panel">
+          <h2>About this board</h2>
+          <p class="muted small">This is a front-end learning project. The internship records are fictional sample data and are not live vacancies.</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p><strong>InternHub</strong> · A responsive internship board built with HTML, CSS and JavaScript.</p>
+    <p>Fictional demonstration data · Not affiliated with LinkedIn.</p>
+  </footer>
+</body>
+</html>
