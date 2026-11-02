@@ -159,6 +159,57 @@
     </div>
   </main>
 
+
+  <!-- Application Form Modal -->
+  <div class="modal" id="applicationModal" aria-hidden="true">
+    <div class="modal-content">
+      <button type="button" class="modal-close" id="closeApplicationModal"
+        aria-label="Close application form">&times;</button>
+
+      <h2>Apply for Internship</h2>
+      <p class="muted" id="applicationInternshipTitle"></p>
+
+      <form id="applicationForm">
+        <div class="field">
+          <label for="applicantName">Full Name *</label>
+          <input type="text" id="applicantName" name="applicant_name"
+            minlength="2" maxlength="100" required>
+        </div>
+
+        <div class="field">
+          <label for="applicantEmail">Email Address *</label>
+          <input type="email" id="applicantEmail" name="email"
+            maxlength="254" required>
+        </div>
+
+        <div class="field">
+          <label for="applicantPhone">Phone Number *</label>
+          <input type="tel" id="applicantPhone" name="phone"
+            pattern="[0-9+\-\s()]{7,20}" required>
+        </div>
+
+        <div class="field">
+          <label for="resumeUrl">Resume URL</label>
+          <input type="url" id="resumeUrl" name="resume_url"
+            placeholder="https://example.com/resume.pdf">
+        </div>
+
+        <div class="field">
+          <label for="coverLetter">Cover Letter</label>
+          <textarea id="coverLetter" name="cover_letter"
+            maxlength="2000" rows="4"></textarea>
+        </div>
+
+        <p id="applicationStatus" role="status" aria-live="polite"></p>
+
+        <button type="submit" class="details-button" id="submitApplication">
+          Submit Application
+        </button>
+      </form>
+    </div>
+  </div>
+
+
   <footer class="footer">
     <p><strong>InternHub</strong> · A responsive internship board built with HTML, CSS and JavaScript.</p>
     <p>Fictional demonstration data · Not affiliated with LinkedIn.</p>

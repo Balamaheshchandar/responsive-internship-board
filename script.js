@@ -14,6 +14,18 @@ const shortcutSavedCount = document.querySelector("#shortcutSavedCount");
 const savedGrid = document.querySelector("#savedGrid");
 const savedEmpty = document.querySelector("#savedEmpty");
 const savedResultCount = document.querySelector("#savedResultCount");
+// Application form elements
+const applicationModal = document.querySelector("#applicationModal");
+const applicationForm = document.querySelector("#applicationForm");
+const closeApplicationModal = document.querySelector("#closeApplicationModal");
+const applicationInternshipTitle = document.querySelector("#applicationInternshipTitle");
+const applicationStatus = document.querySelector("#applicationStatus");
+const submitApplicationButton = document.querySelector("#submitApplication");
+
+const APPLICATION_API_URL = "http://localhost:3000/api/applications";
+
+let selectedInternshipId = null;
+
 
 const STORAGE_KEY = "internhub-saved-internships-v1";
 let internships = [];
@@ -51,44 +63,86 @@ function showEmptyState(title, description, target = internshipGrid) {
   target.replaceChildren(empty);
 }
 
+const API_URL = "http://localhost:3000/api/internships";
+
+
 async function loadInternships() {
-  resultCount.textContent = "Loading…";
+  resultCount.textContent = "Loading internships...";
   statusMessage.textContent = "";
+  showEmptyState("Loading internships...", "Please wait.");
 
   try {
-    const response = await fetch("./internships.json", { cache: "no-store" });
-    if (!response.ok) throw new Error(`Dataset request failed (${response.status}).`);
+    const response = await fetch(API_URL, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
 
-    const data = await response.json();
-    if (!data || !Array.isArray(data.internships)) {
-      throw new Error("The JSON file must contain an 'internships' array.");
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
     }
 
-    internships = data.internships.filter(isValidInternship);
-    if (internships.length === 0) {
-      throw new Error("No valid internship records were found in the dataset.");
+    const result = await response.json();
+
+    if (!result.success || !Array.isArray(result.data)) {
+      throw new Error("Invalid API response.");
     }
+
+    internships = result.data.map(item => ({
+      ...item,
+      id: String(item.id),
+      domain: getDomain(item.title),
+      openings: 0
+    })).filter(isValidInternship);
 
     loadFailed = false;
+
     populateFilterOptions();
     renderQuickFilters();
     renderDomainLinks();
+
     profileTotal.textContent = String(internships.length);
+
     renderInternships();
     renderSavedInternships();
+
   } catch (error) {
     loadFailed = true;
     console.error("Could not load internships:", error);
+
     resultCount.textContent = "Unavailable";
     profileTotal.textContent = "—";
+
     statusMessage.textContent =
-      "We couldn't load the internship data. Check that internships.json is in the same folder and run the site using a local web server.";
-    showEmptyState("Internships couldn't be loaded", "Check the JSON filename and format, then refresh the page.");
-    domainLinks.replaceChildren(textElement("p", "muted small", "Domain filters are unavailable until the data loads."));
+      "Unable to connect to the internship API. Check whether the backend server is running.";
+
+    showEmptyState(
+      "Internships couldn't be loaded",
+      "Please check your backend connection and try again."
+    );
+
+    domainLinks.replaceChildren(
+      textElement("p", "muted small", "Domain filters unavailable.")
+    );
+
     savedGrid.replaceChildren();
     savedEmpty.hidden = false;
   }
+} // This closes loadInternships()
+
+function getDomain(title) {
+  const value = title.toLowerCase();
+
+  if (value.includes("frontend")) return "Frontend Development";
+  if (value.includes("flutter")) return "Mobile Development";
+  if (value.includes("python")) return "Backend Development";
+  if (value.includes("design")) return "UI/UX Design";
+  if (value.includes("qa")) return "Quality Assurance";
+
+  return "Other";
 }
+
 
 function isValidInternship(item) {
   return item &&
@@ -97,8 +151,7 @@ function isValidInternship(item) {
     typeof item.domain === "string" &&
     typeof item.mode === "string" &&
     typeof item.location === "string" &&
-    Array.isArray(item.skills) &&
-    Number.isFinite(Number(item.openings));
+    Array.isArray(item.skills);
 }
 
 function populateFilterOptions() {
@@ -223,7 +276,7 @@ function createInternshipCard(item, compact = false) {
   item.skills.forEach(skill => skills.append(textElement("span", "skill", skill)));
 
   const bottom = textElement("div", "card-bottom");
-  const openings = textElement("span", "openings", `${Number(item.openings)} ${Number(item.openings) === 1 ? "opening" : "openings"}`);
+  const openings = textElement("span", "openings", item.stipend || "Stipend not specified");
 
   const actions = textElement("div", "card-actions");
   const isSaved = savedIds.includes(item.id);
@@ -234,15 +287,20 @@ function createInternshipCard(item, compact = false) {
   saveButton.addEventListener("click", () => toggleSaved(item.id));
 
   const detailsButton = textElement("button", "details-button", "View details");
-  detailsButton.type = "button";
-  detailsButton.addEventListener("click", () => showInternshipDetails(item));
+detailsButton.type = "button";
+detailsButton.addEventListener("click", () => showInternshipDetails(item));
 
-  actions.append(saveButton, detailsButton);
+// Apply Now button
+const applyButton = textElement("button", "details-button", "Apply Now");
+applyButton.type = "button";
+applyButton.addEventListener("click", () => openApplicationForm(item));
+
+actions.append(saveButton, detailsButton, applyButton);
   bottom.append(openings, actions);
   card.append(top, meta);
 
   if (!compact) {
-    card.append(textElement("p", "card-description", `Explore this ${item.domain.toLowerCase()} opportunity and build practical experience.`));
+    card.append(textElement("p", "card-description", item.description || "Explore this internship opportunity."));
     card.append(skills);
   }
 
@@ -257,8 +315,11 @@ function showInternshipDetails(item) {
     `Work mode: ${item.mode}`,
     `Location: ${item.location}`,
     `Skills: ${item.skills.join(", ")}`,
-    `Openings: ${item.openings}`,
-    `Reference: ${item.id}`,
+  `Company: ${item.company}`,
+  `Stipend: ${item.stipend}`,
+  `Duration: ${item.duration}`,
+  `Employment type: ${item.employment_type}`,
+  `Reference: ${item.id}`,
     "",
     "This is fictional sample data for the EdVyro assignment, not a live vacancy."
   ].join("\n");
@@ -322,4 +383,92 @@ domainFilter.addEventListener("change", renderInternships);
 modeFilter.addEventListener("change", renderInternships);
 clearFiltersButton.addEventListener("click", resetFilters);
 
+function openApplicationForm(item) {
+  selectedInternshipId = item.id;
+  applicationInternshipTitle.textContent = item.title;
+  applicationStatus.textContent = "";
+  applicationStatus.style.color = "";
+  applicationForm.reset();
+
+  applicationModal.classList.add("is-open");
+  applicationModal.setAttribute("aria-hidden", "false");
+
+  document.querySelector("#applicantName").focus();
+}
+
+function closeApplicationForm() {
+  applicationModal.classList.remove("is-open");
+  applicationModal.setAttribute("aria-hidden", "true");
+  selectedInternshipId = null;
+}
+
+closeApplicationModal.addEventListener("click", closeApplicationForm);
+
+applicationModal.addEventListener("click", event => {
+  if (event.target === applicationModal) {
+    closeApplicationForm();
+  }
+});
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && applicationModal.classList.contains("is-open")) {
+    closeApplicationForm();
+  }
+});
+applicationForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!selectedInternshipId) return;
+
+  const formData = new FormData(applicationForm);
+
+  const payload = {
+    internship_id: Number(selectedInternshipId),
+    applicant_name: formData.get("applicant_name").trim(),
+    email: formData.get("email").trim(),
+    phone: formData.get("phone").trim(),
+    resume_url: formData.get("resume_url").trim(),
+    cover_letter: formData.get("cover_letter").trim()
+  };
+
+  submitApplicationButton.disabled = true;
+  submitApplicationButton.textContent = "Submitting...";
+  applicationStatus.textContent = "Submitting your application...";
+
+  try {
+    const response = await fetch(APPLICATION_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.error?.message || result.message || "Application failed."
+      );
+    }
+
+    applicationStatus.textContent =
+      `Application submitted successfully! Reference ID: ${result.application_id}`;
+
+    applicationStatus.style.color = "green";
+    applicationForm.reset();
+    selectedInternshipId = null;
+
+  } catch (error) {
+    applicationStatus.textContent =
+      error.message || "Could not submit application. Please try again.";
+
+    applicationStatus.style.color = "red";
+
+  } finally {
+    submitApplicationButton.disabled = false;
+    submitApplicationButton.textContent = "Submit Application";
+  }
+});
 loadInternships();
