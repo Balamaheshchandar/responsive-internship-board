@@ -4,19 +4,14 @@ A LinkedIn-inspired, responsive internship discovery platform developed as part 
 
 InternHub allows students to explore internship opportunities, search and filter listings, save interesting internships, and submit applications through an interactive application form.
 
-The project integrates a frontend built with HTML, CSS, and JavaScript with a backend REST API developed using Node.js, Express.js, and SQLite.
+The frontend is built using HTML5, CSS3 and JavaScript and communicates with a REST API developed using Node.js, Express.js and SQLite.
 
----
+## 1. Project Overview
 
-## Project Overview
-
-**Project Name:** InternHub – Responsive Internship Board
-
-**Internship:** EdVyro Full Stack Development Internship
-
-**Task:** Task 04 – Secure Application Integration
-
-**Project Type:** Full Stack Web Application
+- **Project Name:** InternHub – Responsive Internship Board
+- **Internship:** EdVyro Full Stack Development Internship
+- **Task:** Task 04 – Secure Application Integration
+- **Project Type:** Full Stack Web Application
 
 ### Technologies Used
 
@@ -27,121 +22,111 @@ The project integrates a frontend built with HTML, CSS, and JavaScript with a ba
 | JavaScript | REST API | | GitHub |
 | Fetch API | Helmet | | Postman |
 
----
-
-## Features
+## 2. Features
 
 ### Frontend Features
 
-- Responsive, LinkedIn-inspired internship discovery interface.
-- Three-column desktop layout.
-- Search internships by title, domain, location, mode, ID, or skills.
+- Responsive internship discovery interface.
+- Search internships by title, domain, location, mode, ID and skills.
 - Filter internships by domain and work mode.
 - Quick domain selection chips.
-- Dynamically display internship listings from the backend API.
+- Dynamically retrieve internship listings from the backend.
 - Save and bookmark internships using browser localStorage.
 - View detailed internship information.
 - Interactive internship application form.
 - Submit applicant information to the backend.
 - Display application submission status and reference ID.
 - Form validation and error handling.
-- Responsive design for desktop, tablet, and mobile devices.
+- Responsive desktop, tablet and mobile layouts.
 - Semantic HTML and accessible form controls.
 
 ### Backend Features
 
 - RESTful API using Node.js and Express.js.
-- Retrieve internship listings.
-- Retrieve individual internship details.
-- Create, update, and delete internship records.
+- Retrieve internship listings and individual internship details.
+- Create, update and delete internship records.
 - Submit internship applications.
 - Store application information in SQLite.
 - Server-side input validation.
 - Structured JSON responses.
 - Centralized error handling.
 - Health-check endpoint.
+- Structured request logging with request IDs.
 
 ### Security Features
 
 - **Helmet:** Adds HTTP security headers.
 - **CORS:** Restricts permitted frontend origins.
 - **Rate Limiting:** Limits API requests to 100 requests per 15-minute window.
-- **Input Validation:** Validates applicant information before database operations.
+- **Input Validation:** Validates applicant information.
 - **Parameterized SQL Queries:** Helps prevent SQL injection.
 - **Request Size Limiting:** Restricts JSON request bodies to 100 KB.
-- **URL Validation:** Accepts only HTTP and HTTPS resume URLs.
+- **URL Validation:** Accepts HTTP and HTTPS resume URLs.
 
----
-
-## System Architecture
+## 3. System Architecture
 
 The application follows a frontend-backend architecture.
 
 ```text
-          USER
-           |
-           v
-   FRONTEND APPLICATION
-      HTML / CSS / JS
-           |
-           | Fetch API
-           v
-      EXPRESS SERVER
-           |
-           v
-     SECURITY LAYER
-    -----------------
-    Helmet
-    CORS
-    Rate Limiting
-    Input Validation
-    -----------------
-           |
-           v
-       REST API
-           |
-           v
-     SQLITE DATABASE
-    -----------------
-       Internships
-       Applications
-    -----------------
+             USER
+               |
+               v
+       FRONTEND APPLICATION
+          HTML / CSS / JS
+               |
+               | Fetch API
+               v
+         EXPRESS SERVER
+               |
+               v
+          SECURITY LAYER
+       ---------------------
+             Helmet
+              CORS
+          Rate Limiting
+         Input Validation
+       ---------------------
+               |
+               v
+            REST API
+               |
+               v
+          SQLITE DATABASE
+       ---------------------
+           Internships
+           Applications
+       ---------------------
 ```
 
 ### Application Workflow
 
 1. The user opens the InternHub website.
-2. The frontend requests internship listings from the backend API.
+2. The frontend requests internship listings from the backend.
 3. The backend retrieves internship records from SQLite.
 4. Internship information is displayed dynamically.
-5. The user selects an internship and clicks **Apply Now**.
+5. The user selects an internship and clicks Apply Now.
 6. The application form collects applicant details.
 7. The frontend sends the application to the backend.
 8. The backend validates the submitted information.
-9. Valid application details are stored in the SQLite database.
+9. Valid application details are stored in SQLite.
 10. The frontend displays a success message with an application reference ID.
 
----
-
-## Project Repositories
+## 4. Project Repositories
 
 ### Frontend Repository
 
-GitHub: https://github.com/Balamaheshchandar/responsive-internship-board
+https://github.com/Balamaheshchandar/responsive-internship-board
 
 ### Backend Repository
 
-GitHub: https://github.com/Balamaheshchandar/internship-management-api
+https://github.com/Balamaheshchandar/internship-management-api
 
----
-
-## Project Structure
+## 5. Project Structure
 
 ### Frontend
 
 ```text
 responsive-internship-board/
-│
 ├── index.html
 ├── style.css
 ├── script.js
@@ -152,7 +137,6 @@ responsive-internship-board/
 
 ```text
 internship-management-api/
-│
 ├── src/
 │   ├── app.js
 │   ├── config/
@@ -165,23 +149,16 @@ internship-management-api/
 │   └── routes/
 │       ├── internships.js
 │       └── applications.js
-│
 ├── data/
-│   └── internships.db
-│
 ├── package.json
-└── package-lock.json
+├── package-lock.json
+├── server.js
+└── README.md
 ```
 
----
+## 6. Backend API Documentation
 
-## Backend API Documentation
-
-**Base URL:**
-
-```text
-http://localhost:3000
-```
+**Base URL:** `http://localhost:3000`
 
 ### Health Check
 
@@ -202,9 +179,9 @@ Example response:
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/api/internships` | Retrieve all internships |
+| GET | `/api/internships` | Retrieve internships |
 | GET | `/api/internships/:id` | Retrieve an internship by ID |
-| POST | `/api/internships` | Create a new internship |
+| POST | `/api/internships` | Create an internship |
 | PUT | `/api/internships/:id` | Update an internship |
 | DELETE | `/api/internships/:id` | Delete an internship |
 
@@ -237,29 +214,19 @@ Example successful response:
 }
 ```
 
----
-
-## Installation and Setup
+## 7. Installation and Setup
 
 ### Prerequisites
 
-Install the following tools:
-
-- Node.js
+- Node.js 18 or newer
 - npm
 - Visual Studio Code
 - Git
-- VS Code Live Server extension
 
 ### Step 1: Clone the Backend Repository
 
 ```bash
 git clone https://github.com/Balamaheshchandar/internship-management-api.git
-```
-
-Open the backend folder:
-
-```bash
 cd internship-management-api
 ```
 
@@ -269,17 +236,19 @@ cd internship-management-api
 npm install
 ```
 
-### Step 3: Start the Backend Server
+### Step 3: Start the Backend
 
-Run the start command configured in the backend `package.json`.
+```bash
+npm start
+```
 
-The backend API should be available at:
+The backend runs at:
 
 ```text
 http://localhost:3000
 ```
 
-Check the API health:
+Verify the health endpoint:
 
 ```text
 http://localhost:3000/health
@@ -291,29 +260,32 @@ Open another terminal:
 
 ```bash
 git clone https://github.com/Balamaheshchandar/responsive-internship-board.git
+cd responsive-internship-board
 ```
 
-Open the frontend folder in VS Code.
+### Step 5: Start the Frontend
 
-### Step 5: Run the Frontend
+You can use the VS Code Live Server extension or Python's built-in HTTP server.
 
-1. Open `index.html` in VS Code.
-2. Right-click the file.
-3. Select **Open with Live Server**.
+Using Python:
 
-The frontend is available at:
+```powershell
+py -m http.server 5500 --bind 127.0.0.1
+```
+
+Open:
 
 ```text
-http://127.0.0.1:5500/responsive-internship-board/index.html
+http://127.0.0.1:5500
 ```
 
-**Important:** Start the backend before using the frontend. The frontend currently communicates with the local backend at `http://localhost:3000`.
+**Important:** The backend must be running before opening the frontend. The configured backend CORS origin is `http://127.0.0.1:5500`.
 
----
+Keep both development servers running while using the application.
 
-## Database
+## 8. Database
 
-The application uses SQLite with the `better-sqlite3` package.
+The backend uses SQLite with the better-sqlite3 package.
 
 The database stores:
 
@@ -328,78 +300,80 @@ The database stores:
 |---|---|
 | id | Unique application ID |
 | internship_id | Related internship ID |
-| applicant_name | Applicant's full name |
+| applicant_name | Applicant's name |
 | email | Applicant's email |
 | phone | Applicant's phone number |
 | resume_url | Resume link |
 | cover_letter | Applicant's cover letter |
 | created_at | Application submission time |
 
-The application table uses a foreign key to associate applications with internships.
+The applications table uses a foreign key to associate applications with internships.
 
----
+## 9. Security and Logging
 
-## Testing and Validation
+The backend implements:
 
-The following checks were performed during development.
+- Helmet security headers.
+- Restricted CORS configuration.
+- Express rate limiting.
+- JSON request body size limits.
+- Server-side input validation.
+- Parameterized SQLite queries.
+- Centralized error handling.
 
-| Test | Expected Result |
+### Structured Logging
+
+The backend records:
+
+- Timestamp.
+- Log level.
+- Request ID.
+- HTTP method.
+- Request path.
+- Response status code.
+- Request processing duration.
+
+Request bodies and applicant personal information are not included in the request logs.
+
+## 10. Testing and Validation
+
+The following checks were performed during local development.
+
+| Test | Observed Result |
 |---|---|
-| Backend health check | HTTP 200 |
-| Retrieve internships | Internship records returned |
-| Submit valid application | HTTP 201 |
-| Invalid applicant details | HTTP 400 |
-| Invalid internship ID | HTTP 400 |
-| SQL injection-style internship ID | Rejected |
-| Rate limit exceeded | HTTP 429 |
-| Frontend application submission | Success message displayed |
-| Application database storage | Application record created |
-| Security headers | Helmet headers returned |
+| Backend health endpoint | HTTP 200 |
+| Retrieve internships | Five internship records returned |
+| Application submission | Success response received |
+| SQLite application storage | Application record verified |
+| Mobile viewport at 390px | Visually checked |
+| Mobile viewport at 360px | Visually checked |
+| Keyboard navigation | Manual test passed |
+| Structured request logging | Verified |
+| npm security audit | Zero reported vulnerabilities |
+
+### Performance Measurements
+
+Initial local measurements:
+
+| Endpoint | Measured Response Time |
+|---|---:|
+| GET `/api/internships` | 44.01 ms |
+| GET `/health` | 25.80 ms |
+
+These are individual local measurements, not production load-test results.
 
 ### Manual Frontend Testing
 
-- Search for internships.
+- Search internships.
 - Apply domain and work-mode filters.
 - Save and unsave internship listings.
 - Open the application form.
-- Submit valid applicant details.
-- Test invalid email and phone values.
+- Submit test applicant details.
 - Check the application success message.
-- Verify responsive layout on different screen sizes.
+- Verify the responsive layout on mobile screens.
+- Navigate using the keyboard.
 
----
-
-## Security Implementation
-
-The backend includes several security measures to improve application safety.
-
-**Helmet**
-
-Adds security-related HTTP response headers.
-
-**CORS**
-
-Allows requests from the configured frontend development origin.
-
-**Rate Limiting**
-
-Restricts API requests to 100 requests per 15 minutes.
-
-**Input Validation**
-
-Validates applicant name, email, phone number, internship ID, resume URL, and cover letter.
-
-**SQL Injection Protection**
-
-Uses parameterized database queries instead of directly inserting user input into SQL statements.
-
-**Request Size Limiting**
-
-Restricts incoming JSON request bodies to 100 KB.
-
----
-
-## Future Enhancements
+## 11. Future Enhancements
 
 - User registration and authentication.
 - Admin dashboard for managing internships.
@@ -411,36 +385,28 @@ Restricts incoming JSON request bodies to 100 KB.
 - Backend deployment and frontend hosting.
 - Role-based access control.
 
----
-
-## Data and Project Disclaimer
+## 12. Data and Project Disclaimer
 
 The internship records are fictional demonstration records created for educational purposes.
 
 Applications submitted through the application form are stored in the local SQLite database.
 
-The current application is configured for local development and is not yet a publicly deployed production service.
+The current application is configured for local development and has not yet been publicly deployed.
 
-This project is an independent educational project and is not affiliated with LinkedIn.
+This is an independent educational project and is not affiliated with LinkedIn.
 
----
-
-## Author
+## 13. Author
 
 **Balaperumal A**
 
 Full Stack Development Intern
 
-**GitHub:** https://github.com/Balamaheshchandar
+GitHub: https://github.com/Balamaheshchandar
 
----
-
-## Acknowledgement
+## 14. Acknowledgement
 
 Developed as part of the **EdVyro Full Stack Development Internship – Task 04: Secure Application Integration**.
 
 Thank you to EdVyro for providing this opportunity to learn and implement full-stack application development and security concepts.
 
----
-
-**Project Status:** Task 04 – Implementation and GitHub submission completed.
+**Project Status:** Local implementation and testing completed; final documentation, repository verification and submission pending.
